@@ -54,9 +54,10 @@ class HStockPricePredictor:
 
             # run the HStockPricePredictor application
             case _:
-                print(f"Starting web application server")
-                sys.argv = ["streamlit", "run", "HStockPricePredictorUI.py"] 
-                sys.exit(stcli.main())
+                if(sys.argv[-1] == arg ):
+                    print(f"Starting web application server")
+                    sys.argv = ["streamlit", "run", "HStockPricePredictorUI.py"] 
+                    sys.exit(stcli.main())
 
     # =================================================================
     # launch the HStockPricePredictor application
@@ -71,4 +72,5 @@ class HStockPricePredictor:
 if __name__ == "__main__":
         print(f"Start to run the HStockPricePredictor application")
         hStockPricePredictor = HStockPricePredictor()
+
         hStockPricePredictor.launch()
