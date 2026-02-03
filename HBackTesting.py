@@ -21,16 +21,16 @@ class HBackTesting:
         with st.form("back_testing_form"):
             st.write("Back Testing")
             ticker = st.selectbox(label="Select Ticker", options=db.getTickers())
-            fromDate = st.date_input(label="Historical Data From Date", format="YYYY-MM-DD")
-            toDate = st.date_input(label="Historical Data To Date", format="YYYY-MM-DD")
+            #fromDate = st.date_input(label="Historical Data From Date", format="YYYY-MM-DD")
+            #toDate = st.date_input(label="Historical Data To Date", format="YYYY-MM-DD")
             if st.form_submit_button("Back Testing"):
                 with st.spinner("Loading...", show_time=True):
                     # load model, scaler and history
                     model, scaler, history = hVnStockPredictModel.loadModel(ticker)
                     # load data
-                    df = db.load(ticker, fromDate, toDate)
+                    df = db.load(ticker, "", "")
                     # run back testing in 50 days
-                    results = hVnStockPredictModel.backtest(model, scaler, hVnStockPredictModel.prepareScalerData(df, scaler), df, 50)
+                    results = hVnStockPredictModel.backtest(model, scaler, hVnStockPredictModel.prepareScalerData(df, scaler), df)
                     # draw back testing chart
                     plt = hVnStockPredictModel.drawBackTestingChart(results)
                     st.pyplot(plt, use_container_width=True) # Display the figure
