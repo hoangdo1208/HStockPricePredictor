@@ -61,6 +61,7 @@ class HVnStockPredictModel:
         # ==========================================
         # Step #3: prepare full data OHLC, RSI and MA for chart drawing and model training
         # ==========================================
+        df = df.reset_index() # reset index to return Time column
         df.columns = ["Time", "Open", "High", "Low", "Close", "Volume", "RSI", "MA20", "MA50"]
 
         return df
@@ -130,6 +131,8 @@ class HVnStockPredictModel:
             LSTM(units=128, return_sequences=True, input_shape=(X_train.shape[1], X_train.shape[2])),
             Dropout(0.2),
             LSTM(units=64, return_sequences=False),
+            Dropout(0.2),
+            LSTM(units=32, return_sequences=False),
             Dropout(0.2),
             Dense(units=predictionDays) # Output layer predicts {predictionDays} days at once
         ])
@@ -249,7 +252,7 @@ class HVnStockPredictModel:
     # =================================================================
     # Prepare scaler data
     # =================================================================
-    def prepareScalerData(self, df: pd.DataFrame, scaler: MinMaxScaler) -> pd.DataFrame:
+    def prepareScalerData(self, df: pd.DataFrame, scaler: MinMaxScaler) -> any:
         dfNew = df.copy()
         dfNew = self.computeRSI_MA(dfNew) ## compute RSI, MA20 & MA50
         dfNew = dfNew.dropna() # load data and drop NA field
@@ -258,9 +261,10 @@ class HVnStockPredictModel:
     # =================================================================
     # Back testing the model
     # =================================================================
-    def backtest(self, model: Sequential, scaler: MinMaxScaler, scaled_data: pd.DataFrame, original_df: pd.DataFrame, test_days: int=50):
+    def backtest(self, model: Sequential, scaler: MinMaxScaler, scaled_data: any, original_df: pd.DataFrame, test_days: int=60):
         predictionsList = []
         realPrices = []
+        original_df = original_df.reset_index()
         dates = original_df["Time"][-test_days:]
         closeIndex = self.features.index("Close")
 
