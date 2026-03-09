@@ -62,7 +62,8 @@ class HVnStockPredictModel:
         # Step #3: prepare full data OHLC, RSI and MA for chart drawing and model training
         # ==========================================
         df = df.reset_index() # reset index to return Time column
-        df.columns = ["Time", "Open", "High", "Low", "Close", "Volume", "RSI", "MA20", "MA50"]
+        #df.columns = ["Time", "Open", "High", "Low", "Close", "Volume", "RSI", "MA20", "MA50"]
+        #print(df)
 
         return df
 
@@ -130,7 +131,7 @@ class HVnStockPredictModel:
         model = Sequential([
             LSTM(units=128, return_sequences=True, input_shape=(X_train.shape[1], X_train.shape[2])),
             Dropout(0.2),
-            LSTM(units=64, return_sequences=False),
+            LSTM(units=64, return_sequences=True),
             Dropout(0.2),
             LSTM(units=32, return_sequences=False),
             Dropout(0.2),
