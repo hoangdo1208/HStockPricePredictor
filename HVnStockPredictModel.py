@@ -15,6 +15,7 @@ from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.callbacks import LearningRateScheduler, EarlyStopping
 from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 
 # =================================================================
 # The Vietnam Stock Market Predict model
@@ -303,17 +304,24 @@ class HVnStockPredictModel:
     # =================================================================
     def drawBackTestingChart(self, results: pd.DataFrame) -> plt:
         # compute mae
+        results['Date'] = pd.to_datetime(results['Date'])
         mae = results['Error_VNĐ'].mean()
 
         # draw chart
+        print(results)
         plt.figure(figsize=(15, 7))
         plt.plot(results['Date'], results['Real'], label='Price', color='blue', linewidth=2)
         plt.plot(results['Date'], results['Predicted'], label='Prediction Price', color='red', linestyle='--', alpha=0.8)
         plt.title('Back testing result: Real vs Predict (T+1)')
-        plt.xlabel('Date')
-        plt.ylabel('Price (VNĐ)')
+        plt.xlabel('Date', fontsize=12)
+        plt.ylabel('Price (VNĐ)', fontsize=12)
+        plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%d/%m/%Y'))
+        plt.gca().xaxis.set_major_locator(mdates.AutoDateLocator())
+        plt.xticks(rotation=45)
         plt.legend()
-        plt.grid(True)
+        plt.legend(loc='upper left')
+        plt.grid(True, linestyle=':', alpha=0.6)
+        plt.tight_layout()
         return plt
 
 # =================================================================
